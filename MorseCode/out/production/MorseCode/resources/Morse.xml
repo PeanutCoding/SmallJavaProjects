@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Morse>
+    <letters>
+        <token id="a" morse=".-">A</token>
+        <token id="b" morse="-...">B</token>
+        <token id="c" morse="-.-.">C</token>
+        <token id="d" morse="-..">D</token>
+        <token id="e" morse=".">E</token>
+        <token id="f" morse="..-.">F</token>
+        <token id="g" morse="--.">G</token>
+        <token id="h" morse="....">H</token>
+        <token id="i" morse="..">I</token>
+        <token id="j" morse=".---">J</token>
+        <token id="k" morse="-.-">K</token>
+        <token id="l" morse=".-..">L</token>
+        <token id="m" morse="--">M</token>
+        <token id="n" morse="-.">N</token>
+        <token id="o" morse="---">O</token>
+        <token id="p" morse=".--.">P</token>
+        <token id="q" morse="--.-">Q</token>
+        <token id="r" morse=".-.">R</token>
+        <token id="s" morse="...">S</token>
+        <token id="t" morse="-">T</token>
+        <token id="u" morse="..-">U</token>
+        <token id="v" morse="...-">V</token>
+        <token id="w" morse=".--">W</token>
+        <token id="x" morse="-..-">X</token>
+        <token id="y" morse="-.--">Y</token>
+        <token id="z" morse="--..">Z</token>
+        <token id="." morse="E">.</token>
+        <token id="?" morse="..--..">?</token>
+        <token id=" " morse="/">backslash</token>
+        <token id="!" morse="-.-.--">!</token>
+    </letters>
+    <numbers>
+        <token id="1" morse=".----">1</token>
+        <token id="2" morse="..---">2</token>
+        <token id="3" morse="...--">3</token>
+        <token id="4" morse="....-">4</token>
+        <token id="5" morse=".....">5</token>
+        <token id="6" morse="-....">6</token>
+        <token id="7" morse="--...">7</token>
+        <token id="8" morse="---..">8</token>
+        <token id="9" morse="----.">9</token>
+        <token id="0" morse="-----">0</token>
+    </numbers>
+</Morse>
