@@ -12,7 +12,8 @@ import java.util.*;
 
 public class MorseConverter {
 
-    private HashMap<String, String> dict;
+    private HashMap<String, String> dictAToM;
+    private HashMap<String, String> dictMToA;
     private final String fileName = "src/resources/Morse.xml";
 
 
@@ -30,8 +31,7 @@ public class MorseConverter {
     /**
      * Type in words or sentences to translate until no longer wished for
      */
-    public void conversation(){
-        Scanner scan = new Scanner(System.in);
+    public void conversation(Scanner scan){
         System.out.println("Shall I translate a word or sentence? If yes, enter 1");
         if(scan.nextLine().equals("1")){
             System.out.println("Please enter a word: ");
@@ -40,29 +40,68 @@ public class MorseConverter {
                 System.out.println("Goodbye");
                 System.exit(0);
             }
-            String conv = convert(scan.nextLine().trim());
+            String line = scan.nextLine().trim();
+            String conv = "";
+            while(scan.hasNext(line)){
+                String next = scan.next(line);
+                int size = next.length();
+                if(next.startsWith("-") || next.startsWith(".") &&
+                        next.charAt(1) == '.' || next.charAt(1) == '-'){
+                    conv += convertMorse(next, size);
+                }
+                else
+                    conv += convertChars(next, size);
+            }
             System.out.println("The converted word " + "is: " + conv);
-            conversation();
+
+            conversation(scan);
         }
         System.out.println("Goodbye.");
         System.exit(0);
+    }
+
+    /**
+     * Method to convert morse code into human readable characters
+     * @param word the String to translate
+     * @param size size of the string
+     * @return translation of the string
+     */
+    public String convertMorse(String word, int size){
+        String word2 = word.toLowerCase();
+        StringBuilder build = new StringBuilder();
+        String now = "";
+        for(int i = 0; i < size; i++) {
+            char tmp = word2.charAt(i);
+            if (tmp == '.' || tmp == '-' || tmp == 'E') {
+                now += tmp;
+            }
+            else {
+                if(!now.isEmpty()) {
+                    build.append(getMorseMo(now));
+                    now = "";
+                }
+                if (tmp == '/')
+                    build.append(" ");
+            }
+        }
+        return build.toString();
     }
     /**
      * Convert a given sequence of characters
      * @param word word or sentence to translate.
      * @return The word or sentence converted to morse code
      */
-    public String convert(String word){
-        int size = word.length();
+    public String convertChars(String word, int size){
         String word2 = word.toLowerCase();
         StringBuilder builder = new StringBuilder();
         for(int i = 0; i < size; i++){
             String current = word2.substring(i, i+1);
-            String morse = getMorse(current);
+            String morse = getMorseCh(current);
             builder.append(morse);
-            builder.append(" ");
+            builder.append("'");
         }
-        return builder.toString();
+        builder.reverse().replace(0,0,"").reverse();
+        return builder.append("/").toString();
     }
 
     /**
@@ -71,9 +110,21 @@ public class MorseConverter {
      * @param current current character of string
      * @return converted character
      */
-    private String getMorse(String current){
-        if(dict.containsKey(current))
-            return dict.get(current);
+    private String getMorseCh(String current){
+        if(dictAToM.containsKey(current))
+            return dictAToM.get(current);
+
+        return "[Not found]";
+    }
+
+    /**
+     * Converts a morse sequence to it's reciprocate
+     * @param current morse string
+     * @return respective translation
+     */
+    private String getMorseMo(String current){
+        if(dictMToA.containsKey(current))
+            return dictMToA.get(current);
 
         return "[Not found]";
     }
@@ -88,10 +139,19 @@ public class MorseConverter {
         if(!checkFile(f))
             throw new IOException("Files does not exist!");
 
-        this.dict = new HashMap<>();
+        this.dictAToM = new HashMap<>();
+        this.dictMToA = new HashMap<>();
         parseMap(nums);
+        //testMaps();
     }
 
+    /**
+     * A simple method to check, whether the dictionaries were parsed correctly
+     */
+    private void testMaps(){
+        this.dictMToA.forEach((k, v) -> {System.out.println(k + " " + v);});
+        this.dictAToM.forEach((k, v) -> {System.out.println(k + " " + v);});
+    }
     /**
      * predicate to check for the file to parse from
      * @param f file to check for
@@ -121,13 +181,10 @@ public class MorseConverter {
                         parseLetters(reader);
                         break;
                     case "numbers":
-                        if (!nums){
+                        if (!nums)
                             t = false;
-                            break;
-                        }
-                        else{
+                        else
                             parseLetters(reader);
-                        }
                         break;
                 }
             }
@@ -149,10 +206,13 @@ public class MorseConverter {
                     Iterator<Attribute> attributes = start.getAttributes();
                     String morse = attributes.next().getValue();
                     String id = attributes.next().getValue();
-                    this.dict.put(id, morse);
+                    // put character as key, morse as value
+                    this.dictAToM.put(id, morse);
+                    // put morse as key, character as value
+                    this.dictMToA.put(morse, id);
                 }
             }
-            // parse until the end of a alphabet type is reached
+            // parse until the end of an alphabet type is reached
             else if(event.getEventType() == XMLStreamConstants.END_ELEMENT){
                 EndElement end = event.asEndElement();
                 if(!end.getName().getLocalPart().equals("token"))
@@ -163,8 +223,11 @@ public class MorseConverter {
     public static void main(String[] args){
         try {
             MorseConverter converter = new MorseConverter(false);
-            System.out.print(converter.convert("test") + "\n");
-            converter.conversation();
+            String test = "testerino this sentence pliz.";
+            String test2 = "-'.'...'-'.'.-.'..'-.'---'/'-'....'..'...'/'...'.'-.'-'.'-.'-.-.'.'/'.--.'.-..'..'--..'/";
+            System.out.print(converter.convertChars(test.toLowerCase(), test.length()) + "\n");
+            System.out.println(converter.convertMorse(test2, test2.length()));
+            //converter.conversation(new Scanner(System.in));
         }
         catch(IOException | XMLStreamException e){
             e.printStackTrace();
