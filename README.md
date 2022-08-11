@@ -12,6 +12,9 @@ however, this takes some more time and thought.
 I have created this program with an xml file since it is a good exercise what can be
 done with this file format.
 
+
+11.08.2022:
+
 The converter is now available as a small Android application, one-directional.
 The file "app-debug".apk allows your Android device to install this app. So far
 it is not available in the Google Playstore, thus a warning might occur due to 
