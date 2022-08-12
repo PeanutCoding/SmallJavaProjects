@@ -76,23 +76,26 @@ public class MorseConverter{
      * @param dict the dict containing the keys and values
      */
     public void convertMorse(Dictionary dict){
-        String word = text.toLowerCase();
+        String word = text;
         StringBuilder build = new StringBuilder();
         String now = "";
         for(int i = 0; i < size; i++) {
             String tmp = word.substring(i, i+1);
             if (tmp.equals(".") || tmp.equals("-") || tmp.equals("E")) {
-                now.concat(tmp);
+                now = now.concat(tmp);
             }
             else {
                 if(!now.isEmpty()) {
                     build.append(dict.getMorse(now));
                     now = "";
                 }
+
                 if (tmp.equals("/"))
                     build.append(" ");
             }
+
         }
+
         convert = build.toString();
     }
     /**

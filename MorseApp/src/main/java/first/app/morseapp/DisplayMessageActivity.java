@@ -18,7 +18,10 @@ import android.view.View;
 import android.widget.TextView;
 
 public class DisplayMessageActivity extends AppCompatActivity {
-
+    /**
+     * Creates the text views where the output of the conversation ought to appear
+     * @param savedInstanceState default param for super onCreate
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,25 +29,39 @@ public class DisplayMessageActivity extends AppCompatActivity {
 
         // Get the Intent that started this activity and extract the string
         Intent output = getIntent();
+
         startService(output);
-        String message = output.getStringExtra("copy");
 
-        // Capture the layout's TextView and set the string as its text
-        TextView textView = findViewById(R.id.textView);
-        TextView textView2 = findViewById(R.id.textView2);
-        String content = output.getStringExtra("id");
-        String first = "Your text: \n\n".concat(content).concat("\n\n your translation:");
+        TextView upperText = findViewById(R.id.textView);
+        TextView lowerText = findViewById(R.id.textView2);
+        // check whether something went wrong in the message receiving part
+        if(output.hasExtra("error"))
+            upperText.setText(output.getStringExtra("error"));
 
-        textView.setText(first);
-        textView.setMovementMethod(new ScrollingMovementMethod());
+        else{
+            String message = output.getStringExtra("copy");
 
-        textView2.setText(message);
-        textView2.setMovementMethod(new ScrollingMovementMethod());
-        registerForContextMenu(textView);
-        registerForContextMenu(textView2);
+            // Capture the layout's TextView and set the string as its text
+            String content = output.getStringExtra("id");
+            String first = "Your text: \n\n".concat(content).concat("\n\n your translation:");
+            upperText.setText(first);
+            lowerText.setText(message);
+        }
+
+        upperText.setMovementMethod(new ScrollingMovementMethod());
+        lowerText.setMovementMethod(new ScrollingMovementMethod());
+
+        registerForContextMenu(upperText);
+        registerForContextMenu(lowerText);
 
     }
 
+    /**
+     * Creates a copy menu to copy the output
+     * @param menu the contextmenu of android
+     * @param v the window for the context menu
+     * @param mf menu info
+     */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo mf){
 
