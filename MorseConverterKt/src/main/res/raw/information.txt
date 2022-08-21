@@ -1,0 +1,18 @@
+How to do:
+
+If you want normal characters translated into morse code, simply put in your text or message
+and hit the alphabet button.
+
+If you have morse code and want it translated into normal characters, put in the text field below
+and hit the morse button.
+
+The morse has a special layout, and if you do not stick to this convention,
+all you will get is a [Not found] string.
+After each letter in morse, i. e.
+
+.- = a
+
+put a qutoation mark after the end of the morse representation.
+the following will produce the word "hello"
+
+....'.'.-..'.-..'---'/
